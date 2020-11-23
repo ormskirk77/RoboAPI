@@ -1,0 +1,1 @@
+ICM20948_BANK_SEL = 0x7f
