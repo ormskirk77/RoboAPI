@@ -1,31 +1,32 @@
-from RoboAPI.imu import Imu
-import smbus
-
+import mem_registers
+from imu import Imu
 
 class Thermometer(Imu):
 
-    TEMPERATURE_DEGREES_OFFSET = 18
+
+    TEMPERATURE_DEGREES_OFFSET = 21
     TEMPERATURE_SENSITIVITY = 333.87
-    ROOM_TEMP_OFFSET = 18
+    ROOM_TEMP_OFFSET = 21
 
-    temperature = None
+    _temperature = None
 
-    def __init__(self):
-        self.i2c_bus = smbus.SMBus(2)
-        self.temperature = None
-        self.updateTemperature()
-        pass
 
     def getTemperature(self):
-        if self.temperature == None:
-            print("Problem reading temperature")
-        elif self.temperature != None:
-            return self.temperature
+        self._updateTemperature()
+        if self._temperature == None:
+            print("Problem reading temperature.\n")
+        elif self._temperature != None:
+            return self._temperature
 
-    def updateTemperature(self):
-     #   self.i2c_bus.write_byte_data(0x68, 0x06, 0b00000000)
-        temp_high = self.i2c_bus.read_byte_data(0x68, 0x39)
-        temp_low = self.i2c_bus.read_byte_data(0x68, 0x3A)
-        self.temperature = ((self.concatenateBytes(temp_high, temp_low) - self.ROOM_TEMP_OFFSET) /
-                            self.TEMPERATURE_SENSITIVITY) + self.TEMPERATURE_DEGREES_OFFSET
+
+    def _updateTemperature(self):
+        self.setMemoryBank(0)
+        temp_high = self.imu.readSingleRegister(mem_registers.ICM20948_TEMP_OUT_H)
+        temp_low = self.imu.readSingleRegister(mem_registers.ICM20948_TEMP_OUT_L)
+        # temp_high = self.i2c_bus.read_byte_data(0x68, mem_registers.ICM20948_TEMP_OUT_H)
+        # temp_low = self.i2c_bus.read_byte_data(0x68, mem_registers.ICM20948_TEMP_OUT_L)
+
+        print("temp High: " + str(temp_high) + "   " + "temp low: " + str(temp_low))
+
+        self._temperature = ((self.concatenateBytes(temp_high, temp_low) - self.ROOM_TEMP_OFFSET) / self.TEMPERATURE_SENSITIVITY) + self.TEMPERATURE_DEGREES_OFFSET
 

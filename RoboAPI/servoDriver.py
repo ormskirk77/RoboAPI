@@ -1,31 +1,26 @@
-#import mraa
+import mraa
 import time
 
-from RoboAPI.driver import Driver
+from driver import Driver
+
 
 
 class ServoDriver(Driver):
+
+
+    # x = mraa.Pwm(3)  # initialise PWM
+    # print("test")
+    # x.period_us(700)  #   set PWM period
+    # x.enable(True) #  enable PWM
+    # value = 0.0
+    #
+    # while True:
+    #     x.write(value) # write PWM value
+    #     time.sleep(0.05)
+    #
+    #     value = value + 0.01
+    #     if value >= 1:
+    #         value = 0.0
     pass
 
-    # initialise PWM
- #   x = mraa.Pwm(3)
-
-    # set PWM period
- #   x.period_us(700)
-
-    # enable PWM
-#    x.enable(True)
-
-  #   value = 0.0
-  #
-  #   while True:
-  #       # write PWM value
-  # #      x.write(value)
-  #
-  #       time.sleep(0.05)
-  #
-  #       value = value + 0.01
-  #       if value >= 1:
-  #           value = 0.0
-  #   pass
 
