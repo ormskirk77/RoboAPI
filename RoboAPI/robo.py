@@ -9,9 +9,6 @@ class Robo:
 
 
     thermometer = Thermometer()
- #   motor1 = MotorDriver()
- #   servoDriver = ServoDriver()
- #   accelerometer = Accelerometer()
 
     def initialiseImu(self):
         self.thermometer.initialise()

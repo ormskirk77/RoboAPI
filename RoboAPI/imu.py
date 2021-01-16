@@ -6,13 +6,10 @@ from smbus import SMBus
 class Imu(Sensor):
 
 
-
-
     def initialiseIMU(self):
 
         print("imu")
         self._memoryBank = -1
-
 
         self.setMemoryBank(0)
         if not self.readSingleRegister(mem_registers.ICM20948_WHO_AM_I) == mem_registers.CHIP_ID:
