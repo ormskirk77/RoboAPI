@@ -1,6 +1,6 @@
 from sensor import Sensor
-import mem_registers, time
-from smbus import SMBus
+import mem_registers
+import time
 
 
 class Imu(Sensor):

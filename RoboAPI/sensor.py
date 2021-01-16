@@ -1,13 +1,14 @@
 import smbus
 
-class Sensor:
 
+class Sensor:
+    
     i2c_bus = smbus.SMBus(2)
 
-
-    def concatenateBytes(self, highByte, lowByte):
-        a = highByte << 8
-        return (a | lowByte)
+    @staticmethod
+    def concatenateBytes(high_byte, low_byte):
+        a = high_byte << 8
+        return a | low_byte
 
 
 
