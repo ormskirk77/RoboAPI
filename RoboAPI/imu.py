@@ -4,12 +4,11 @@ import time
 
 
 class Imu(Sensor):
-
+    _memoryBank = -1
 
     def initialiseIMU(self):
 
         print("imu")
-        self._memoryBank = -1
 
         self.setMemoryBank(0)
         if not self.readSingleRegister(mem_registers.ICM20948_WHO_AM_I) == mem_registers.CHIP_ID:
@@ -22,13 +21,6 @@ class Imu(Sensor):
         self.write(mem_registers.ICM20948_PWR_MGMT_2, 0x00)
 
         self.setMemoryBank(2)
-        self.set_gyro_sample_rate(100)
-        self.set_gyro_low_pass(enabled=True, mode=5)
-        self.set_gyro_full_scale(250)
-
-        self.set_accelerometer_sample_rate(125)
-        self.set_accelerometer_low_pass(enabled=True, mode=5)
-        self.set_accelerometer_full_scale(16)
         self.write(mem_registers.ICM20948_INT_PIN_CFG, 0x30)
 
         self.setMemoryBank(3)
@@ -52,6 +44,6 @@ class Imu(Sensor):
 
     def write(self, reg, value):
         """Write byte to the sensor."""
-        self.sensor.i2c_bus.write_byte_data(mem_registers.I2C_ADDR, reg, value)
+        self.i2c_bus.write_byte_data(mem_registers.I2C_ADDR, reg, value)
         time.sleep(0.0001)
 

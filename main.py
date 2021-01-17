@@ -4,6 +4,8 @@ from RoboAPI.robo import Robo
 
 robo = Robo()
 
+#robo.initialiseImu()
+
 print("Temp: " + str(robo.thermometer.getTemperature()))
 
 imu = ICM20948()

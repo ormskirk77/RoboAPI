@@ -19,11 +19,10 @@ class Thermometer(Imu):
 
     def _updateTemperature(self):
         self.setMemoryBank(0)
-        temp_high = self.imu.readSingleRegister(mem_registers.ICM20948_TEMP_OUT_H)
-        temp_low = self.imu.readSingleRegister(mem_registers.ICM20948_TEMP_OUT_L)
+        temp_high = self.readSingleRegister(mem_registers.ICM20948_TEMP_OUT_H)
+        temp_low = self.readSingleRegister(mem_registers.ICM20948_TEMP_OUT_L)
 
         print("temp High: " + str(temp_high) + "   " + "temp low: " + str(temp_low))
-
-        self._temperature = ((self.concatenateBytes(temp_high, temp_low) - self.ROOM_TEMP_OFFSET) /
-                             self.TEMPERATURE_SENSITIVITY) + self.TEMPERATURE_DEGREES_OFFSET
+        temp_bytes = self.concatenateBytes(temp_high, temp_low)
+        self._temperature = ((temp_bytes - self.ROOM_TEMP_OFFSET) / self.TEMPERATURE_SENSITIVITY) + self.TEMPERATURE_DEGREES_OFFSET
 

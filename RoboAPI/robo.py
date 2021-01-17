@@ -1,13 +1,14 @@
 from thermometer import Thermometer
+from imu import Imu
 
 
 class Robo:
 
-
+    imu = Imu()
     thermometer = Thermometer()
 
     def initialiseImu(self):
-        self.thermometer.initialise()
+        self.imu.initialiseIMU()
 
 
 
