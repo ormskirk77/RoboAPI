@@ -1,24 +1,30 @@
+from pynq import Clocks
+
 
 class Driver:
 
-    def __init__(self):
-        self.speed = 10
-        self.direction = 0
+    _duty_cycle = 0
+    _pwm_on_time = 0
+    _pwm_off_time = 0
 
-    def whoami(self):
-        print("Driver")
+    def set_duty_cycle(self, new_duty_cycle):
+        if 0 < new_duty_cycle and new_duty_cycle > 100:
+            print("Duty cycle must be between 0 and 100")
+        else:
+            self._duty_cycle = new_duty_cycle
+            self._pwm_on_time, self._pwm_off_time = self._calc_duty_cycle_times(self._duty_cycle)
 
-    # def setSpeed(self, newSpeed):
-    #     self.speed = newSpeed
-    #
-    # def setDirection(self, direction):
-    #     if direction == 0:
-    #         self.direction = 0
-    #         print("Direction changed to ", 0)
-    #     elif direction == 1
-    #         self.direction = 1
-    #         print("Direction changed to ", 1)
+    def _calc_duty_cycle_times(self, duty_cycle):
+        """
+        calculates the times required to instigate a duty cycle in a for loop using delays. Uses the fclk0_mhz from
+        pynq to calculate these times. Use the returned values in a delay for loop.
+        :return:
+        """
+        clock = Clocks.fclk0_mhz
+        time_on = duty_cycle / (clock * 100)
+        time_off = (1 / clock) - time_on
+        return time_on, time_off
 
-    def printSpeed(self):
-        print(self.speed)
+
+
 
