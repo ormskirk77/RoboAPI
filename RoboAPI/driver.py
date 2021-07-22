@@ -16,13 +16,15 @@ class Driver:
 
     def _calc_duty_cycle_times(self, duty_cycle):
         """
-        calculates the times required to instigate a duty cycle in a for loop using delays. Uses the fclk0_mhz from
+        Calculates the times required to instigate a duty cycle in a for loop using delays. Uses the fclk0_mhz from
         pynq to calculate these times. Use the returned values in a delay for loop.
         :return: tuple time_on, time 0ff. Both floats
         """
         clock = Clocks.fclk0_mhz
+
         time_on = duty_cycle / (clock * 100)
         time_off = (1 / clock) - time_on
+        print("time on: " + str(time_on) + "   Time off: " + str(time_off) + "    Period: " + str(time_on+time_off))
         return time_on, time_off
 
 

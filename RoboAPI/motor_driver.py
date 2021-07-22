@@ -20,18 +20,20 @@ class MotorDriver(Driver):
         self._speed_pin = GPIO(GPIO.get_gpio_pin(speed_pin), 'out')
         self._ain0_pin = GPIO(GPIO.get_gpio_pin(ain0_pin), 'out')
         self._ain1_pin = GPIO(GPIO.get_gpio_pin(ain1_pin), 'out')
-        self._ain0_pin.write(0)
-        self._ain1_pin.write(0)
+        # Start with the brake ON
+        self._ain0_pin.write(1)
+        self._ain1_pin.write(1)
         self.speed = 0
         self.set_duty_cycle(self.speed)
         self.in_queue = Queue(1)
         self.out_queue = Queue(1)
-        self.direction = Direction.FORWARD
+      #  self.direction = Direction.FORWARD
         self.event = event
-        self._speed_pin.write(1)
+      #  self._speed_pin.write(1)
 
     def set_direction(self, direction_queue):
         new_dir = direction_queue.get()
+        # TODO fix argument guard.
         if 0 > new_dir > 1:
             print("Direction must be 0 or 1.")
         self.direction = new_dir
@@ -58,13 +60,21 @@ class MotorDriver(Driver):
             if not speed_queue.empty():
                 self.speed = speed_queue.get()
                 self.set_duty_cycle(self.speed)
-            self._speed_pin.write(1)
-            time.sleep(self._pwm_on_time)
-            self._speed_pin.write(0)
-            time.sleep(self._pwm_off_time)
+            if not self.speed == 0:
+                self._speed_pin.write(1)
+                time.sleep(self._pwm_on_time)
+                self._speed_pin.write(0)
+                time.sleep(self._pwm_off_time)
 
             if self.event.is_set():
                 break
 
     def motor_off(self):
+        """
+        Call motor_off() to stop the infinite loop and stop the motor properly.
+        :return:
+        """
         self.event.set()
+        self.in_queue.put(Direction.BRAKE)
+        self.set_direction(self.in_queue)
+

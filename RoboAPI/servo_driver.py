@@ -5,7 +5,9 @@ from pynq import GPIO
 
 
 class ServoDriver(Driver):
-
+    '''
+    Servo specific code.
+    '''
     def __init__(self, control_pin, max_position, event):
         self.event = event
         self._control_pin = GPIO(GPIO.get_gpio_pin(control_pin), 'out')
@@ -19,10 +21,12 @@ class ServoDriver(Driver):
             if not new_position_queue.empty():
                 # Calculate the new position as a proportion of the max position for the servo, then set the duty cycle based on this.
                 self.position = new_position_queue.get()
-                self.set_duty_cycle((self.position/self.max_position)*100)
+                new_duty_cycle = (self.position/self.max_position)*100
+                self.set_duty_cycle(new_duty_cycle)
             self._control_pin.write(1)
             time.sleep(self._pwm_on_time)
             self._control_pin.write(0)
+            time.sleep(self._pwm_off_time)
             time.sleep(self._pwm_off_time)
 
             if self.event.is_set():

@@ -7,7 +7,10 @@ class Imu(Sensor):
     _memoryBank = -1
 
     def initialiseIMU(self):
-
+        '''
+        The IMU needs to be initialsed after power-up, otherwise all the sensors will remain in a 'sleep' state to conserve power.
+        :return: Nothing
+        '''
         print("imu")
 
         self.setMemoryBank(0)
@@ -27,16 +30,27 @@ class Imu(Sensor):
         self.write(mem_registers.ICM20948_I2C_MST_DELAY_CTRL, 0x01)
 
     def setMemoryBank(self, memory_bank):
+        '''
+        Sets the register so when you call a write function it writes to the correct memory bank on the IMU20948
+        :param memory_bank: memory bank number
+        :return: nothing
+        '''
         if not self._memoryBank == memory_bank:
             self.write(mem_registers.ICM20948_BANK_SEL, memory_bank << 4)
             self._memoryBank = memory_bank
 
     def readSingleRegister(self, register_address):
+        '''
+        Reads a single register of the given address. Be sure to check you are in the correct memory bank BEFORE
+        calling this function.
+        :param register_address: address to be read
+        :return:
+        '''
         return self.i2c_bus.read_byte_data(mem_registers.I2C_ADDR, register_address)
 
     def readContigRegisters(self, start_address, num_of_bytes=1):
         """
-
+        Read several register in one read.
         :param start_address:
         :param num_of_bytes:
         :return:
